@@ -438,14 +438,6 @@ const Contact: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const encode = (data: any) => {
-    return Object.keys(data)
-      .map(
-        (key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]),
-      )
-      .join("&");
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -455,12 +447,12 @@ const Contact: React.FC = () => {
 
     try {
       // Create form data in the format Netlify expects
-      // const formDataToSubmit = new URLSearchParams();
-      // formDataToSubmit.append("form-name", "contact");
-      // formDataToSubmit.append("name", formData.name);
-      // formDataToSubmit.append("email", formData.email);
-      // formDataToSubmit.append("subject", formData.subject);
-      // formDataToSubmit.append("message", formData.message);
+      const formDataToSubmit = new URLSearchParams();
+      formDataToSubmit.append("form-name", "contact");
+      formDataToSubmit.append("name", formData.name);
+      formDataToSubmit.append("email", formData.email);
+      formDataToSubmit.append("subject", formData.subject);
+      formDataToSubmit.append("message", formData.message);
 
       // Simulate success on localhost to verify UI
       if (
@@ -476,21 +468,10 @@ const Contact: React.FC = () => {
         return;
       }
 
-      // const response = await fetch("/", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      //   body: formDataToSubmit.toString(),
-      // });
-
       const response = await fetch("/", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: encode({
-          "form-name": "contact",
-          ...formData,
-        }),
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: formDataToSubmit.toString(),
       });
 
       if (response.ok) {
@@ -656,7 +637,6 @@ const Contact: React.FC = () => {
           <StyledForm
             name="contact"
             method="POST"
-            action="/"
             data-netlify="true"
             data-netlify-honeypot="bot-field"
             onSubmit={handleSubmit}
