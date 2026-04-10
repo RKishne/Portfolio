@@ -29,17 +29,53 @@ export const ServicesGrid = styled.div`
   gap: var(--spacing-8);
   max-width: 1216px;
   margin: 0 auto;
+  padding-inline:30px;
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
     gap: var(--spacing-6);
+    padding-inline:20px;
   }
 `;
 
 export const ServiceCard = styled(motion.div)`
   background: rgba(30, 41, 59, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   padding: var(--spacing-8);
   border-radius: var(--radius-xl);
+  position: relative;
+  overflow: hidden;
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+  cursor: default;
+  will-change: auto;
+
+  &:hover {
+    background: rgba(30, 41, 59, 0.7);
+    border-color: rgba(100, 255, 218, 0.3);
+    transform: translateY(-6px);
+    box-shadow: 0 10px 40px -10px rgba(100, 255, 218, 0.2);
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--accent-gradient);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  &:hover::after {
+    opacity: 1;
+  }
 `;
 
 export const ServiceIcon = styled.div`
