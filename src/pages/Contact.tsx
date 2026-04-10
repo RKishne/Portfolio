@@ -1,0 +1,824 @@
+import React, { useState } from "react";
+import styled from "styled-components";
+import { motion, AnimatePresence } from "framer-motion";
+import { Container, Section, Badge } from "../styles/GlobalStyle";
+import SEO from "../components/SEO";
+
+import FAQSchema from "../components/FAQSchema";
+
+// --- Styled Components ---
+
+const ContactHero = styled(Section)`
+  padding-top: 120px;
+  padding-bottom: 60px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+
+  /* Ambient background glow */
+  &::before {
+    content: "";
+    position: absolute;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(
+      circle,
+      rgba(100, 255, 218, 0.03) 0%,
+      transparent 70%
+    );
+    z-index: -1;
+    pointer-events: none;
+  }
+`;
+
+const HeroTitle = styled(motion.h1)`
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  margin-bottom: var(--spacing-6);
+  background: linear-gradient(
+    135deg,
+    var(--accent-primary) 0%,
+    var(--accent-secondary) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: var(--font-extrabold);
+  letter-spacing: -0.025em;
+`;
+
+const HeroSubtitle = styled(motion.p)`
+  font-size: var(--text-xl);
+  color: var(--dark-300);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+`;
+
+const ContactContent = styled(Container)`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-12);
+  align-items: start;
+  padding-bottom: 100px;
+
+  @media (max-width: 968px) {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-12);
+  }
+`;
+
+// Left Column: Contact Info
+const InfoColumn = styled(motion.div)`
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+`;
+
+const InfoCard = styled(motion.div)`
+  background: rgba(30, 41, 59, 0.3);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-2xl);
+  padding: var(--spacing-8);
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    border-color: rgba(100, 255, 218, 0.2);
+  }
+`;
+
+const InfoTitle = styled.h3`
+  font-size: var(--text-xl);
+  color: var(--dark-100);
+  margin-bottom: var(--spacing-4);
+  font-weight: var(--font-bold);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+`;
+
+const InfoText = styled.div`
+  color: var(--dark-400);
+  line-height: 1.6;
+  font-size: var(--text-base);
+
+  p {
+    margin-bottom: var(--spacing-3);
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  a {
+    color: var(--accent-primary);
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+`;
+
+// ... (keeping previous code flow)
+
+const SocialGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-3);
+
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-2);
+  }
+`;
+
+const SocialCardButton = styled(motion.a)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-4);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-xl);
+  color: var(--dark-300);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  gap: var(--spacing-2);
+
+  @media (max-width: 480px) {
+    padding: var(--spacing-3);
+    border-radius: var(--radius-lg);
+    gap: var(--spacing-1);
+  }
+
+  span {
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+
+    @media (max-width: 480px) {
+      font-size: var(--text-xs);
+    }
+  }
+
+  svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+    margin-bottom: 4px;
+
+    @media (max-width: 480px) {
+      width: 20px;
+      height: 20px;
+      margin-bottom: 2px;
+    }
+  }
+
+  &:hover {
+    background: rgba(100, 255, 218, 0.1);
+    border-color: var(--accent-primary);
+    transform: translateY(-4px);
+    color: var(--accent-primary);
+    box-shadow: 0 4px 12px rgba(100, 255, 218, 0.15);
+  }
+`;
+
+// Right Column: Contact Form
+const FormColumn = styled(motion.div)`
+  position: relative;
+`;
+
+const StyledForm = styled.form`
+  background: rgba(30, 41, 59, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(100, 255, 218, 0.1);
+  border-radius: var(--radius-2xl);
+  padding: var(--spacing-8);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+
+  @media (max-width: 640px) {
+    padding: var(--spacing-6);
+  }
+`;
+
+const FormGroup = styled.div`
+  margin-bottom: var(--spacing-6);
+  position: relative;
+`;
+
+const Label = styled.label`
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--dark-300);
+  margin-bottom: var(--spacing-2);
+  margin-left: 4px;
+`;
+
+const Input = styled.input<{ $hasError?: boolean }>`
+  width: 100%;
+  padding: 14px 16px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid
+    ${(props) =>
+      props.$hasError ? "var(--error)" : "rgba(255, 255, 255, 0.1)"};
+  border-radius: var(--radius-lg);
+  color: var(--dark-100);
+  font-size: var(--text-base);
+  transition: all 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: ${(props) =>
+      props.$hasError ? "var(--error)" : "var(--accent-primary)"};
+    background: rgba(15, 23, 42, 0.8);
+    box-shadow: 0 0 0 4px
+      ${(props) =>
+        props.$hasError
+          ? "rgba(239, 68, 68, 0.1)"
+          : "rgba(100, 255, 218, 0.1)"};
+  }
+
+  &::placeholder {
+    color: var(--dark-500);
+  }
+`;
+
+const Textarea = styled.textarea<{ $hasError?: boolean }>`
+  width: 100%;
+  padding: 14px 16px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid
+    ${(props) =>
+      props.$hasError ? "var(--error)" : "rgba(255, 255, 255, 0.1)"};
+  border-radius: var(--radius-lg);
+  color: var(--dark-100);
+  font-size: var(--text-base);
+  min-height: 150px;
+  resize: vertical;
+  transition: all 0.3s ease;
+  font-family: inherit;
+
+  &:focus {
+    outline: none;
+    border-color: ${(props) =>
+      props.$hasError ? "var(--error)" : "var(--accent-primary)"};
+    background: rgba(15, 23, 42, 0.8);
+    box-shadow: 0 0 0 4px
+      ${(props) =>
+        props.$hasError
+          ? "rgba(239, 68, 68, 0.1)"
+          : "rgba(100, 255, 218, 0.1)"};
+  }
+
+  &::placeholder {
+    color: var(--dark-500);
+  }
+`;
+
+const ErrorText = styled(motion.span)`
+  display: block;
+  color: var(--error);
+  font-size: var(--text-xs);
+  margin-top: 6px;
+  margin-left: 4px;
+`;
+
+const SubmitButton = styled(motion.button)`
+  width: 100%;
+  padding: 16px;
+  background: var(--accent-gradient);
+  color: var(--dark-950);
+  border: none;
+  border-radius: var(--radius-lg);
+  font-weight: var(--font-bold);
+  font-size: var(--text-base);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-3);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(100, 255, 218, 0.25);
+  }
+`;
+
+const StatusMessage = styled(motion.div)<{ type: "success" | "error" }>`
+  padding: var(--spacing-4);
+  border-radius: var(--radius-lg);
+  margin-top: var(--spacing-6);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  background: ${(props) =>
+    props.type === "success"
+      ? "rgba(16, 185, 129, 0.1)"
+      : "rgba(239, 68, 68, 0.1)"};
+  border: 1px solid
+    ${(props) =>
+      props.type === "success"
+        ? "rgba(16, 185, 129, 0.2)"
+        : "rgba(239, 68, 68, 0.2)"};
+  color: ${(props) =>
+    props.type === "success" ? "var(--success)" : "var(--error)"};
+  font-size: var(--text-sm);
+`;
+
+// Icons
+const GitHubIcon = () => (
+  <svg viewBox="0 0 24 24">
+    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+  </svg>
+);
+
+const LinkedInIcon = () => (
+  <svg viewBox="0 0 24 24">
+    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+  </svg>
+);
+
+const InstagramIcon = () => (
+  <svg viewBox="0 0 24 24">
+    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+  </svg>
+);
+const WebsiteIcon = () => (
+  <svg
+    fill="#fff"
+    viewBox="0 0 100 100"
+    version="1.1"
+    xml:space="preserve"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    stroke="#fff"
+  >
+    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+    <g
+      id="SVGRepo_tracerCarrier"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    ></g>
+    <g id="SVGRepo_iconCarrier">
+      {" "}
+      <g id="network"></g> <g id="connection"></g> <g id="page"></g>{" "}
+      <g id="support"></g> <g id="configuration"></g>{" "}
+      <g id="cloud_storage">
+        {" "}
+        <path d="M85,68c1.7,0,3-1.3,3-3s-1.3-3-3-3H54c-0.6,0-1-0.4-1-1v-2h22.5C84,59,91,52,91,43.5S84,28,75.5,28c-1.7,0-3.3,0.3-4.9,0.8 c0.2-1.3,0.4-2.5,0.4-3.8c0-11.6-9.4-21-21-21c-11,0-19.9,8.3-20.9,19.1C28.4,23,27.7,23,27,23c-9.9,0-18,8.1-18,18s8.1,18,18,18 h20v2c0,0.6-0.4,1-1,1H15c-1.7,0-3,1.3-3,3s1.3,3,3,3h4v3.6l-2.7,2.7c-0.4,0.4-0.4,1,0,1.4s1,0.4,1.4,0l1.3-1.3V80h-4 c-1.7,0-3,1.3-3,3v10c0,1.7,1.3,3,3,3h10c1.7,0,3-1.3,3-3V83c0-1.7-1.3-3-3-3h-4v-5.6l1.3,1.3c0.2,0.2,0.5,0.3,0.7,0.3 s0.5-0.1,0.7-0.3c0.4-0.4,0.4-1,0-1.4L21,71.6V68h28v3.6l-2.7,2.7c-0.4,0.4-0.4,1,0,1.4s1,0.4,1.4,0l1.3-1.3V80h-4 c-1.7,0-3,1.3-3,3v10c0,1.7,1.3,3,3,3h10c1.7,0,3-1.3,3-3V83c0-1.7-1.3-3-3-3h-4v-5.6l1.3,1.3c0.2,0.2,0.5,0.3,0.7,0.3 s0.5-0.1,0.7-0.3c0.4-0.4,0.4-1,0-1.4L51,71.6V68h28v3.6l-2.7,2.7c-0.4,0.4-0.4,1,0,1.4s1,0.4,1.4,0l1.3-1.3V80h-4 c-1.7,0-3,1.3-3,3v10c0,1.7,1.3,3,3,3h10c1.7,0,3-1.3,3-3V83c0-1.7-1.3-3-3-3h-4v-5.6l1.3,1.3c0.2,0.2,0.5,0.3,0.7,0.3 s0.5-0.1,0.7-0.3c0.4-0.4,0.4-1,0-1.4L81,71.6V68H85z M26,83v10c0,0.6-0.4,1-1,1H15c-0.6,0-1-0.4-1-1V83c0-0.6,0.4-1,1-1h10 C25.6,82,26,82.4,26,83z M56,83v10c0,0.6-0.4,1-1,1H45c-0.6,0-1-0.4-1-1V83c0-0.6,0.4-1,1-1h10C55.6,82,56,82.4,56,83z M86,83v10 c0,0.6-0.4,1-1,1H75c-0.6,0-1-0.4-1-1V83c0-0.6,0.4-1,1-1h10C85.6,82,86,82.4,86,83z M27,57c-8.8,0-16-7.2-16-16s7.2-16,16-16 c0.9,0,1.8,0.1,2.9,0.3c0.3,0.1,0.6,0,0.8-0.2c0.2-0.2,0.4-0.5,0.4-0.7C31.4,14,39.7,6,50,6c10.5,0,19,8.5,19,19 c0,1.7-0.2,3.5-0.7,5.2c-0.1,0.4,0,0.8,0.3,1c0.3,0.3,0.7,0.3,1.1,0.1c1.9-0.9,3.8-1.3,5.8-1.3C82.9,30,89,36.1,89,43.5 S82.9,57,75.5,57H53V44h2c5,0,9-4,9-9v-2.8c1.8-1.1,3-3,3-5.2c0-1.8-0.8-3.5-2.2-4.7c-1.4-1.1-3.3-1.6-5.1-1.2 c-2.4,0.5-4.2,2.4-4.6,4.8c-0.4,2.5,0.7,5,2.9,6.2V35c0,1.7-1.3,3-3,3h-2V21.2c2.2-1.2,3.3-3.7,2.9-6.2c-0.4-2.4-2.3-4.3-4.6-4.8 c-1.8-0.4-3.7,0.1-5.1,1.2C44.8,12.5,44,14.2,44,16c0,2.2,1.2,4.1,3,5.2V47h-2c-1.7,0-3-1.3-3-3v-2.8c2.2-1.2,3.3-3.7,2.9-6.2 c-0.4-2.4-2.3-4.3-4.6-4.8c-1.8-0.4-3.7,0.1-5.1,1.2C33.8,32.5,33,34.2,33,36c0,2.2,1.2,4.1,3,5.2V44c0,5,4,9,9,9h2v4H27z M14,65 c0-0.6,0.4-1,1-1h31c1.7,0,3-1.3,3-3v-9c0-0.6-0.4-1-1-1h-3c-3.9,0-7-3.1-7-7v-3.4c0-0.4-0.2-0.8-0.6-0.9C35.9,39,35,37.6,35,36 c0-1.2,0.5-2.3,1.5-3.1c1-0.8,2.2-1.1,3.4-0.8c1.5,0.3,2.8,1.6,3.1,3.2c0.3,1.8-0.6,3.6-2.3,4.4c-0.4,0.2-0.6,0.5-0.6,0.9V44 c0,2.8,2.2,5,5,5h3c0.6,0,1-0.4,1-1V20.6c0-0.4-0.2-0.8-0.6-0.9C46.9,19,46,17.6,46,16c0-1.2,0.5-2.3,1.5-3.1 c1-0.8,2.2-1.1,3.4-0.8c1.5,0.3,2.8,1.6,3.1,3.2c0.3,1.8-0.6,3.6-2.3,4.4c-0.4,0.2-0.6,0.5-0.6,0.9V39c0,0.6,0.4,1,1,1h3 c2.8,0,5-2.2,5-5v-3.4c0-0.4-0.2-0.8-0.6-0.9c-1.7-0.7-2.7-2.5-2.3-4.4c0.3-1.6,1.5-2.9,3.1-3.2c1.2-0.3,2.4,0,3.4,0.8 c0.9,0.8,1.5,1.9,1.5,3.1c0,1.6-0.9,3-2.4,3.7c-0.4,0.2-0.6,0.5-0.6,0.9V35c0,3.9-3.1,7-7,7h-3c-0.6,0-1,0.4-1,1v18 c0,1.7,1.3,3,3,3h31c0.6,0,1,0.4,1,1s-0.4,1-1,1H15C14.4,66,14,65.6,14,65z"></path>{" "}
+      </g>{" "}
+      <g id="password"></g> <g id="search_engine"></g> <g id="history"></g>{" "}
+      <g id="SEO"></g> <g id="optimization"></g> <g id="backlink"></g>{" "}
+      <g id="performance"></g> <g id="analytics"></g> <g id="security"></g>{" "}
+      <g id="dark_web"></g> <g id="video_player"></g>{" "}
+      <g id="upload_download"></g> <g id="incognito_tab"></g>{" "}
+      <g id="bookmark"></g>{" "}
+    </g>
+  </svg>
+);
+// --- Component ---
+
+interface FormData {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}
+
+interface FormErrors {
+  name?: string;
+  email?: string;
+  subject?: string;
+  message?: string;
+}
+
+const Contact: React.FC = () => {
+  const [formData, setFormData] = useState<FormData>({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [status, setStatus] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name as keyof FormErrors]) {
+      setErrors((prev) => ({ ...prev, [name]: undefined }));
+    }
+  };
+
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {};
+    if (!formData.name.trim()) newErrors.name = "Please enter your name";
+    if (!formData.email.trim()) newErrors.email = "Email is required";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
+      newErrors.email = "Please enter a valid email address";
+    if (!formData.subject.trim()) newErrors.subject = "Subject is required";
+    if (!formData.message.trim()) newErrors.message = "Message is required";
+    else if (formData.message.length < 10)
+      newErrors.message = "Message must be at least 10 characters";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    setIsSubmitting(true);
+    setStatus(null);
+
+    try {
+      // Create form data in the format Netlify expects
+      const formDataToSubmit = new URLSearchParams();
+      formDataToSubmit.append("form-name", "contact");
+      formDataToSubmit.append("name", formData.name);
+      formDataToSubmit.append("email", formData.email);
+      formDataToSubmit.append("subject", formData.subject);
+      formDataToSubmit.append("message", formData.message);
+
+      // Simulate success on localhost to verify UI
+      if (
+        window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1"
+      ) {
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // Fake network delay
+        setStatus({
+          type: "success",
+          message: "Message sent! (Localhost simulation)",
+        });
+        setFormData({ name: "", email: "", subject: "", message: "" });
+        return;
+      }
+
+      const response = await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: formDataToSubmit.toString(),
+      });
+
+      if (response.ok) {
+        setStatus({
+          type: "success",
+          message: "Message sent! I'll get back to you soon.",
+        });
+        setFormData({ name: "", email: "", subject: "", message: "" });
+      } else {
+        throw new Error("Network response was not ok");
+      }
+    } catch (error) {
+      console.error("Form submission failed:", error);
+      setStatus({
+        type: "error",
+        message: "Something went wrong. Please try again or email me directly.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1, delayChildren: 0.1 },
+    },
+  };
+
+  const itemSlideLeft = {
+    hidden: { opacity: 0, x: -30 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.6 } },
+  };
+
+  const itemSlideRight = {
+    hidden: { opacity: 0, x: 30 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.6 } },
+  };
+
+  return (
+    <>
+      <SEO
+        title="Contact Rahul kishne (Rahul RK) - Hire Freelance Full Stack Developer"
+        description="Get in touch with Rahul kishne (Rahul RK) for web development, security tools, or custom software projects."
+        keywords="Contact Rahul kishne, Rahul RK, Hire Developer, Freelance Web Developer"
+        url="https://Rahul-rnr.netlify.app/contact"
+      />
+      <FAQSchema />
+
+      <ContactHero>
+        <Container>
+          <HeroTitle
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            Let's create something
+            <br />
+            extraordinary.
+          </HeroTitle>
+          <HeroSubtitle
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            Have a project in mind? Looking for a developer who cares about
+            details?
+            <br />
+            Drop me a line and let's start a conversation.
+          </HeroSubtitle>
+        </Container>
+      </ContactHero>
+
+      <ContactContent
+        as={motion.div}
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <InfoColumn variants={itemSlideLeft}>
+          <InfoCard>
+            <InfoTitle>
+              <span>📧</span> Email Me
+            </InfoTitle>
+            <InfoText>
+              <p>For project inquiries, collaborations, or just to say hi:</p>
+              <a
+                href="mailto:kishnerahul860@gmail.com"
+                style={{ fontSize: "1.1rem", fontWeight: 600 }}
+              >
+                kishnerahul860@gmail.com
+              </a>
+              <p
+                style={{
+                  marginTop: "var(--spacing-2)",
+                  fontSize: "0.9em",
+                  opacity: 0.7,
+                }}
+              >
+                I usually respond within 24 hours.
+              </p>
+            </InfoText>
+          </InfoCard>
+
+          <InfoCard>
+            <InfoTitle>
+              <span>📍</span> Location
+            </InfoTitle>
+            <InfoText>
+              <p>
+                Based in <strong>Madhya Pradesh, India</strong>
+              </p>
+              <p>
+                Operating in <strong>IST (UTC +5:30)</strong>
+              </p>
+              <div style={{ marginTop: "var(--spacing-3)" }}>
+                <Badge variant="success">Available for new projects</Badge>
+              </div>
+            </InfoText>
+          </InfoCard>
+
+          <InfoCard>
+            <InfoTitle>
+              <span>🌐</span> Connect
+            </InfoTitle>
+            <SocialGrid>
+              <SocialCardButton
+                href="https://www.linkedin.com/in/rahulkishne/"
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <LinkedInIcon />
+                <span>LinkedIn</span>
+              </SocialCardButton>
+              <SocialCardButton
+                href="https://www.instagram.com/r.kishne_sanatani_/"
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <InstagramIcon />
+                <span>Instagram</span>
+              </SocialCardButton>
+              <SocialCardButton
+                href="https://www.arktechify.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <WebsiteIcon />
+                <span>Website</span>
+              </SocialCardButton>
+            </SocialGrid>
+          </InfoCard>
+        </InfoColumn>
+
+        <FormColumn variants={itemSlideRight}>
+          <StyledForm
+            name="contact"
+            method="POST"
+            data-netlify="true"
+            data-netlify-honeypot="bot-field"
+            onSubmit={handleSubmit}
+          >
+            <input type="hidden" name="form-name" value="contact" />
+            <p hidden>
+              <label>
+                Don't fill this out: <input name="bot-field" />
+              </label>
+            </p>
+
+            <FormGroup>
+              <Label htmlFor="name">
+                Your Name <span aria-hidden="true">*</span>
+              </Label>
+              <Input
+                type="text"
+                id="name"
+                name="name"
+                required
+                aria-required="true"
+                aria-describedby={errors.name ? "name-error" : undefined}
+                placeholder="John Doe"
+                value={formData.name}
+                onChange={handleInputChange}
+                $hasError={!!errors.name}
+              />
+              {errors.name && (
+                <ErrorText
+                  id="name-error"
+                  role="alert"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                >
+                  {errors.name}
+                </ErrorText>
+              )}
+            </FormGroup>
+
+            <FormGroup>
+              <Label htmlFor="email">
+                Email Address <span aria-hidden="true">*</span>
+              </Label>
+              <Input
+                type="email"
+                id="email"
+                name="email"
+                required
+                aria-required="true"
+                aria-describedby={errors.email ? "email-error" : undefined}
+                placeholder="john@example.com"
+                value={formData.email}
+                onChange={handleInputChange}
+                $hasError={!!errors.email}
+              />
+              {errors.email && (
+                <ErrorText
+                  id="email-error"
+                  role="alert"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                >
+                  {errors.email}
+                </ErrorText>
+              )}
+            </FormGroup>
+
+            <FormGroup>
+              <Label htmlFor="subject">
+                Subject <span aria-hidden="true">*</span>
+              </Label>
+              <Input
+                type="text"
+                id="subject"
+                name="subject"
+                required
+                aria-required="true"
+                aria-describedby={errors.subject ? "subject-error" : undefined}
+                placeholder="Project Inquiry"
+                value={formData.subject}
+                onChange={handleInputChange}
+                $hasError={!!errors.subject}
+              />
+              {errors.subject && (
+                <ErrorText
+                  id="subject-error"
+                  role="alert"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                >
+                  {errors.subject}
+                </ErrorText>
+              )}
+            </FormGroup>
+
+            <FormGroup>
+              <Label htmlFor="message">
+                Message <span aria-hidden="true">*</span>
+              </Label>
+              <Textarea
+                id="message"
+                name="message"
+                required
+                aria-required="true"
+                aria-describedby={errors.message ? "message-error" : undefined}
+                placeholder="Tell me about your project..."
+                value={formData.message}
+                onChange={handleInputChange}
+                $hasError={!!errors.message}
+              />
+              {errors.message && (
+                <ErrorText
+                  id="message-error"
+                  role="alert"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                >
+                  {errors.message}
+                </ErrorText>
+              )}
+            </FormGroup>
+
+            <SubmitButton
+              type="submit"
+              disabled={isSubmitting}
+              whileTap={{ scale: 0.98 }}
+            >
+              {isSubmitting ? (
+                <>
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{
+                      repeat: Infinity,
+                      duration: 1,
+                      ease: "linear",
+                    }}
+                    style={{
+                      width: 18,
+                      height: 18,
+                      border: "2px solid rgba(0,0,0,0.2)",
+                      borderTopColor: "currentColor",
+                      borderRadius: "50%",
+                    }}
+                  />
+                  Sending...
+                </>
+              ) : (
+                <>
+                  Send Message <span>🚀</span>
+                </>
+              )}
+            </SubmitButton>
+
+            <div aria-live="polite" aria-atomic="true">
+              <AnimatePresence>
+                {status && (
+                  <StatusMessage
+                    type={status.type}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <span>{status.type === "success" ? "✅" : "❌"}</span>
+                    {status.message}
+                  </StatusMessage>
+                )}
+              </AnimatePresence>
+            </div>
+          </StyledForm>
+        </FormColumn>
+      </ContactContent>
+    </>
+  );
+};
+
+export default Contact;
