@@ -4,15 +4,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Container, Section, Grid, Badge } from "../styles/GlobalStyle";
 import SEO from "../components/SEO";
 
-// Import project images
-import invisioVaultDesktopImg from "../assets/images/InvisioVault_Suit.webp";
-import invisioVaultWebImg from "../assets/images/InvisioVault.webp";
-import barLogoImg from "../assets/images/BAR_logo.webp";
-import sortifyImg from "../assets/images/Sortify.webp";
-import ytDownloaderImg from "../assets/images/YT.webp";
-import linkNestImg from "../assets/images/LN.webp";
-import contactManagerImg from "../assets/images/Contact_Manager.webp";
-
 // ── Case study styled components ───────────────────────────────────────────
 
 const CaseStudyGrid = styled.div`

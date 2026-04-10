@@ -1,11 +1,11 @@
-import React, { useState, useEffect, lazy, Suspense } from "react";
+import React, { useState, lazy, Suspense } from "react";
 import styled from "styled-components";
 import { motion, Variants, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Container, Button } from "../styles/GlobalStyle";
 import SEO from "../components/SEO";
 
-import { getLatestPosts, BlogPost } from "../utils/hashnode";
+// import { getLatestPosts, BlogPost } from "../utils/hashnode";
 import ServicesComponent from "../components/ServicesSection";
 
 // Profile images served from /public — not imported via webpack so they are
@@ -19,7 +19,7 @@ const profileImage300 = "/images/main_image.webp";
 const profileImage150 = "/images/main_image.webp";
 
 // Lazy load components to reduce initial bundle size
-const BlogCard = lazy(() => import("../components/BlogCard"));
+// const BlogCard = lazy(() => import("../components/BlogCard"));
 const ResumeDownload = lazy(() => import("../components/ResumeDownload"));
 
 // --- Styled Components ---
@@ -436,59 +436,59 @@ const StatItem = styled.div`
   }
 `;
 
-const BlogSection = styled.section`
-  padding: var(--spacing-20) 0;
-  position: relative;
+// const BlogSection = styled.section`
+//   padding: var(--spacing-20) 0;
+//   position: relative;
 
-  @media (max-width: 968px) {
-    padding: var(--spacing-10) 0 var(--spacing-4) 0; /* Balanced spacing on mobile */
-  }
+//   @media (max-width: 968px) {
+//     padding: var(--spacing-10) 0 var(--spacing-4) 0; /* Balanced spacing on mobile */
+//   }
 
-  @media (max-width: 640px) {
-    padding: var(--spacing-8) 0 var(--spacing-3) 0; /* Moderate spacing on small screens */
-  }
-`;
+//   @media (max-width: 640px) {
+//     padding: var(--spacing-8) 0 var(--spacing-3) 0; /* Moderate spacing on small screens */
+//   }
+// `;
 
-const BlogHeader = styled.div`
-  text-align: center;
-  margin-bottom: var(--spacing-12);
-`;
+// const BlogHeader = styled.div`
+//   text-align: center;
+//   margin-bottom: var(--spacing-12);
+// `;
 
-const BlogTitle = styled(motion.h2)`
-  font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: var(--font-bold);
-  /* Solid fallback — see Headline comment above for contrast rationale */
-  color: var(--dark-50);
-  background: linear-gradient(180deg, var(--dark-50) 0%, var(--dark-300) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: var(--spacing-3);
-`;
+// const BlogTitle = styled(motion.h2)`
+//   font-size: clamp(2rem, 4vw, 3rem);
+//   font-weight: var(--font-bold);
+//   /* Solid fallback — see Headline comment above for contrast rationale */
+//   color: var(--dark-50);
+//   background: linear-gradient(180deg, var(--dark-50) 0%, var(--dark-300) 100%);
+//   -webkit-background-clip: text;
+//   -webkit-text-fill-color: transparent;
+//   background-clip: text;
+//   margin-bottom: var(--spacing-3);
+// `;
 
-const BlogSubtitle = styled(motion.p)`
-  font-size: var(--text-base);
-  color: var(--dark-400);
-  max-width: 600px;
-  margin: 0 auto var(--spacing-8);
-`;
+// const BlogSubtitle = styled(motion.p)`
+//   font-size: var(--text-base);
+//   color: var(--dark-400);
+//   max-width: 600px;
+//   margin: 0 auto var(--spacing-8);
+// `;
 
-const BlogGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
-  gap: var(--spacing-8);
-  margin-bottom: var(--spacing-10);
+// const BlogGrid = styled.div`
+//   display: grid;
+//   grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+//   gap: var(--spacing-8);
+//   margin-bottom: var(--spacing-10);
 
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    gap: var(--spacing-6);
-  }
-`;
+//   @media (max-width: 768px) {
+//     grid-template-columns: 1fr;
+//     gap: var(--spacing-6);
+//   }
+// `;
 
-const ViewAllButton = styled(Button)`
-  margin: 0 auto;
-  display: block;
-`;
+// const ViewAllButton = styled(Button)`
+//   margin: 0 auto;
+//   display: block;
+// `;
 
 // --- Variant Definitions ---
 
@@ -515,24 +515,24 @@ const itemVariants: Variants = {
 // --- Component ---
 
 const Home: React.FC = () => {
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
-  const [loadingBlog, setLoadingBlog] = useState(true);
+  // const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  // const [loadingBlog, setLoadingBlog] = useState(true);
   const [showResumePreview, setShowResumePreview] = useState(false);
 
-  useEffect(() => {
-    const fetchBlogPosts = async () => {
-      try {
-        const posts = await getLatestPosts(3);
-        setBlogPosts(posts);
-      } catch (error) {
-        console.error("Error fetching blog posts:", error);
-      } finally {
-        setLoadingBlog(false);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchBlogPosts = async () => {
+  //     try {
+  //       const posts = await getLatestPosts(3);
+  //       setBlogPosts(posts);
+  //     } catch (error) {
+  //       console.error("Error fetching blog posts:", error);
+  //     } finally {
+  //       setLoadingBlog(false);
+  //     }
+  //   };
 
-    fetchBlogPosts();
-  }, []);
+  //   fetchBlogPosts();
+  // }, []);
 
   return (
     <>
