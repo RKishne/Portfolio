@@ -2,7 +2,7 @@
   "name": "portfolio",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://Rahul-rnr.netlify.app",
+  "homepage": "https://kishneportfolio.netlify.app",
   "dependencies": {
     "framer-motion": "^12.23.12",
     "react": "^19.1.1",

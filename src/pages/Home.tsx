@@ -539,8 +539,8 @@ const Home: React.FC = () => {
       <SEO
         title="Rahul kishne (Rahul RK) - Full Stack Developer | Building Digital Experiences"
         description="I'm Rahul kishne (Rahul RK), a Full Stack Developer specializing in building exceptional digital experiences, software, and mobile apps. Explore my portfolio of projects, skills, and services."
-        image="https://Rahul-rnr.netlify.app/Rahul-lobo-home.webp"
-        url="https://Rahul-rnr.netlify.app/"
+        image="https://kishneportfolio.netlify.app/Rahul-lobo-home.webp"
+        url="https://kishneportfolio.netlify.app/"
       />
 
       <HeroSection>

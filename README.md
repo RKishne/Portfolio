@@ -4,7 +4,7 @@
 
 **Where code meets creativity (and way too much caffeine) ☕**
 
-[![Live Demo](https://img.shields.io/badge/🚀_Launch-Live_Site-FF2D20?style=for-the-badge&logo=rocket&logoColor=white)](https://Rahul-rnr.netlify.app/)
+[![Live Demo](https://img.shields.io/badge/🚀_Launch-Live_Site-FF2D20?style=for-the-badge&logo=rocket&logoColor=white)](https://kishneportfolio.netlify.app/)
 [![GitHub Repo](https://img.shields.io/badge/📦_Source-GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Mrtracker-new/RNR)
 
 <br />
@@ -137,7 +137,7 @@ The blog page needs a Hashnode publication host to fetch posts. Check `.env.exam
 
 ## 📬 Find Me
 
-- 🌍 **Portfolio**: [Rahul-rnr.netlify.app](https://Rahul-rnr.netlify.app/)
+- 🌍 **Portfolio**: [Rahul-rnr.netlify.app](https://kishneportfolio.netlify.app/)
 - 📦 **GitHub**: [@Mrtracker-new](https://github.com/Mrtracker-new)
 - 📧 **Email**: [Rahullobo901@gmail.com](mailto:Rahullobo901@gmail.com)
 - 📝 **Blog**: [Hashnode](https://rnr-still-figuring-things-out.hashnode.dev/)

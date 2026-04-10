@@ -518,7 +518,7 @@ const Contact: React.FC = () => {
         title="Contact Rahul kishne (Rahul RK) - Hire Freelance Full Stack Developer"
         description="Get in touch with Rahul kishne (Rahul RK) for web development, security tools, or custom software projects."
         keywords="Contact Rahul kishne, Rahul RK, Hire Developer, Freelance Web Developer"
-        url="https://Rahul-rnr.netlify.app/contact"
+        url="https://kishneportfolio.netlify.app/contact"
       />
       <FAQSchema />
 

@@ -142,7 +142,7 @@ const Blog: React.FC = () => {
       <SEO
         title="Blog - Rahul kishne | Thoughts on Development & Technology"
         description="Read my latest articles on web development, programming, and technology. Learn from my experiences and insights in software engineering."
-        url="https://Rahul-rnr.netlify.app/blog"
+        url="https://kishneportfolio.netlify.app/blog"
       />
 
       <BlogSection>

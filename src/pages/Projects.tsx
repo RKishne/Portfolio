@@ -1260,7 +1260,7 @@ const Projects: React.FC = () => {
         title="Projects - Rahul kishne (Rahul RK) | Steganography, Security Tools & Web Apps"
         description="Explore my portfolio of innovative software projects: InvisioVault (steganography & polyglot files), YT-Downloader (free YouTube video & audio downloader), BAR (secure file management), Sortify, and more full-stack web/desktop applications."
         keywords="Steganography, Polyglot Files, Hide Files in Images, YouTube Downloader, Video Downloader, YouTube to MP3, File Encryption, Security Tools, InvisioVault, BAR, Sortify, React Projects, Python Projects, Flask, Full Stack Developer, Rahul kishne, Rahul RNR"
-        url="https://Rahul-rnr.netlify.app/projects"
+        url="https://kishneportfolio.netlify.app/projects"
       />
       <ProjectsHero>
         <Container>

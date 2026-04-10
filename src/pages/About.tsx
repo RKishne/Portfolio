@@ -907,8 +907,8 @@ const About: React.FC = () => {
         title="About Rahul kishne (Rahul RK) - Full Stack Developer & Software Engineer"
         description="Learn about Rahul kishne (Rahul RK), a passionate freelance software engineer from Karnataka, India. Specializing in security applications (steganography, file encryption, polyglot files), web development (React, Flask), and desktop applications. Journey through education, work experience, skills, and professional freelance services."
         keywords="About Rahul kishne, Rahul RK, Rahul RK, Software Engineer India, Full Stack Developer India, Freelance Developer India, Karnataka Developer, Freelance Web Developer, Security Software Developer, Steganography Developer, Polyglot Files Developer, React Developer India, Python Developer India"
-        image="https://Rahul-rnr.netlify.app/about-Rahul-lobo.webp"
-        url="https://Rahul-rnr.netlify.app/about"
+        image="https://kishneportfolio.netlify.app/about-Rahul-lobo.webp"
+        url="https://kishneportfolio.netlify.app/about"
       />
       {/* Hero Section */}
       <AboutHero>

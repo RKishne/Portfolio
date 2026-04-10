@@ -14,8 +14,8 @@ const SEO: React.FC<SEOProps> = ({
   title = "Rahul kishne (Rahul RK) - Full Stack Developer & Software Engineer",
   description = "Rahul kishne (also known as Rahul RK) is a Freelance Full Stack Developer & Software Engineer specializing in security applications, mobile app development, steganography, polyglot files, and modern web development. Creator of InvisioVault, YouTube Downloader, and Sortify.",
   keywords = "Rahul kishne, Rahul RK, Rahul RK, Rahul kishne, Full Stack Developer, Software Engineer, Freelance Developer, Mobile App Developer, React Native, Flutter, Freelancer India, Web Developer, Python Developer, Flask Developer, React Developer, Steganography, Polyglot Files, InvisioVault, RNR",
-  image = "https://Rahul-rnr.netlify.app/logo512.png",
-  url = "https://Rahul-rnr.netlify.app/",
+  image = "https://kishneportfolio.netlify.app/logo512.png",
+  url = "https://kishneportfolio.netlify.app/",
   type = "website",
 }) => {
   const siteName = "Rahul kishne (Rahul RK) Portfolio";
@@ -64,8 +64,8 @@ const SEO: React.FC<SEOProps> = ({
           "@type": "Person",
           name: "Rahul kishne",
           alternateName: ["Rahul RK", "RK", "Rahul RK"],
-          url: "https://Rahul-rnr.netlify.app/",
-          image: "https://Rahul-rnr.netlify.app/logo512.png",
+          url: "https://kishneportfolio.netlify.app/",
+          image: "https://kishneportfolio.netlify.app/logo512.png",
           sameAs: [
             "https://github.com/Mrtracker-new",
             "https://www.linkedin.com/in/Rahul-lobo/",
@@ -115,7 +115,7 @@ const SEO: React.FC<SEOProps> = ({
           "@type": "WebSite",
           name: "Rahul kishne (Rahul RK) Portfolio",
           alternateName: ["Rahul RK Portfolio", "Rahul kishne Portfolio"],
-          url: "https://Rahul-rnr.netlify.app/",
+          url: "https://kishneportfolio.netlify.app/",
           author: {
             "@type": "Person",
             name: "Rahul kishne",
@@ -129,13 +129,13 @@ const SEO: React.FC<SEOProps> = ({
         {JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Organization",
-          "@id": "https://Rahul-rnr.netlify.app/#organization",
+          "@id": "https://kishneportfolio.netlify.app/#organization",
           name: "RK - Rahul kishne Portfolio",
           alternateName: ["RK", "Rahul RK"],
-          url: "https://Rahul-rnr.netlify.app/",
+          url: "https://kishneportfolio.netlify.app/",
           logo: {
             "@type": "ImageObject",
-            url: "https://Rahul-rnr.netlify.app/logo512.png",
+            url: "https://kishneportfolio.netlify.app/logo512.png",
             width: 512,
             height: 512,
           },
