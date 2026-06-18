@@ -1,0 +1,307 @@
+{% style %}
+  .sticky-atc{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  background:#fff;
+  border-top:1px solid #eee;
+  z-index:999;
+  padding:12px;
+  box-shadow:0 -2px 15px rgba(0,0,0,.08);
+  display:none;
+  }
+
+  .sticky-atc.show{
+  display:block;
+  }
+
+  .sticky-atc-inner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  }
+
+  .sticky-product{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  }
+
+  .sticky-product img{
+  border-radius:8px;
+  }
+
+  .sticky-form{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  }
+
+  #sticky-variant{
+  min-width:180px;
+  }
+
+  #sticky-qty{
+  width:70px;
+  text-align:center;
+  }
+
+  @media(max-width:768px){
+
+  .sticky-atc-inner{
+  flex-direction:column;
+  }
+
+  .sticky-form{
+  width:100%;
+  }
+
+  #sticky-add-cart{
+  width:100%;
+  }
+  }
+{% endstyle %}
+{% if template contains 'product' %}
+  <div id="sticky-atc" class="sticky-atc">
+    <div class="sticky-atc-inner">
+      <div class="sticky-product">
+        <img
+          id="sticky-product-image"
+          src="{{ product.featured_image | image_url: width: 100 }}"
+          width="60"
+          height="60"
+        >
+
+        <div>
+          <h4>{{ product.title }}</h4>
+          <div id="sticky-price">
+            {{ product.selected_or_first_available_variant.price | money }}
+          </div>
+        </div>
+      </div>
+      <div id="sticky-variant-title">
+        {{ product.selected_or_first_available_variant.title }}
+      </div>
+      <div class="sticky-form">
+        {% unless product.has_only_default_variant %}
+          <select id="sticky-variant">
+            {% for variant in product.variants %}
+              <option
+                value="{{ variant.id }}"
+                {% if variant == product.selected_or_first_available_variant %}
+                  selected
+                {% endif %}
+              >
+                {{ variant.title }}
+              </option>
+            {% endfor %}
+          </select>
+        {% endunless %}
+        <input
+          type="number"
+          id="sticky-qty"
+          value="1"
+          min="1"
+        >
+
+        <button
+          id="sticky-add-cart"
+          class="button button--primary"
+        >
+          Add To Cart
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.stickyVariants = {{ product.variants | json }};
+  </script>
+{% endif %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  const stickyBar = document.getElementById('sticky-atc');
+  const mainButton = document.querySelector('.product-form__submit');
+  const stickyVariant = document.getElementById('sticky-variant');
+  const qtyInput = document.getElementById('sticky-qty');
+  const addBtn = document.getElementById('sticky-add-cart');
+
+  if (!stickyBar || !mainButton) return;
+
+  // Sticky show/hide
+  window.addEventListener('scroll', () => {
+    const rect = mainButton.getBoundingClientRect();
+    stickyBar.classList.toggle('show', rect.bottom < 0);
+  });
+
+  // Update sticky from current variant
+  function updateStickyUI() {
+
+    const variantId =
+      document.querySelector('input[name="id"]')?.value;
+
+    if (!variantId) return;
+
+    const variant = window.stickyVariants.find(
+      v => String(v.id) === String(variantId)
+    );
+
+    if (!variant) return;
+
+    // Title
+    const titleEl =
+      document.getElementById('sticky-variant-title');
+
+    if (titleEl) {
+      titleEl.textContent = variant.title;
+    }
+
+    // Price
+    const priceEl =
+      document.getElementById('sticky-price');
+
+    if (priceEl) {
+      priceEl.innerHTML =
+        new Intl.NumberFormat('en-IN', {
+          style: 'currency',
+          currency: 'INR'
+        }).format(variant.price / 100);
+    }
+
+    // Image
+    const imageEl =
+      document.getElementById('sticky-product-image');
+
+    if (
+      imageEl &&
+      variant.featured_image &&
+      variant.featured_image.src
+    ) {
+      imageEl.src =
+        variant.featured_image.src;
+    }
+
+    // Dropdown Sync
+    if (stickyVariant) {
+      stickyVariant.value =
+        variant.id;
+    }
+  }
+
+  // Initial
+  setTimeout(updateStickyUI, 500);
+
+  // Main Product -> Sticky
+  document.addEventListener('change', (e) => {
+
+    if (
+      e.target.closest('variant-selects') ||
+      e.target.name === 'id'
+    ) {
+
+      setTimeout(() => {
+        updateStickyUI();
+      }, 300);
+
+    }
+
+  });
+
+  // Sticky -> Main Product
+  if (stickyVariant) {
+
+    stickyVariant.addEventListener(
+      'change',
+      function () {
+
+        const selectedVariant =
+          window.stickyVariants.find(
+            v => String(v.id) === String(this.value)
+          );
+
+        if (!selectedVariant) return;
+
+        const mainSelect =
+          document.querySelector(
+            'variant-selects select'
+          );
+
+        if (mainSelect) {
+
+          mainSelect.value =
+            selectedVariant.title;
+
+          mainSelect.dispatchEvent(
+            new Event('change', {
+              bubbles: true
+            })
+          );
+
+        }
+
+        setTimeout(() => {
+          updateStickyUI();
+        }, 300);
+
+      }
+    );
+
+  }
+
+  // Add To Cart
+  if (addBtn) {
+
+    addBtn.addEventListener(
+      'click',
+      async () => {
+
+        const variantId =
+          document.querySelector(
+            'input[name="id"]'
+          )?.value;
+
+        if (!variantId) return;
+
+        await fetch('/cart/add.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type':
+              'application/json'
+          },
+          body: JSON.stringify({
+            id: variantId,
+            quantity:
+              qtyInput?.value || 1
+          })
+        });
+
+        const drawer =
+          document.querySelector(
+            'cart-drawer'
+          );
+
+        if (
+          drawer &&
+          typeof drawer.open ===
+            'function'
+        ) {
+
+          drawer.open();
+
+        } else {
+
+          window.location.href =
+            '/cart';
+
+        }
+
+      }
+    );
+
+  }
+
+});
+</script>
